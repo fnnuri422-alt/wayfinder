@@ -193,6 +193,49 @@
     <p>© 2026 Wayfinder. All rights reserved.</p>
     <p>Your World, Your Way.</p>
   </footer>
+  <!-- Wayfinder Authentication -->
+<script type="module">
+import { createClient } from
+'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const SUPABASE_URL = 'https://govrnoanaxxvefpymkig.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_PnKKyNIeSawvmwZw0J4VfQ_wTrFcUKj';
+
+const supabase = createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+window.wayfinderAuth = {
+  async signup(email, password) {
+    return await supabase.auth.signUp({
+      email,
+      password
+    });
+  },
+
+  async login(email, password) {
+    return await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+  },
+
+  async logout() {
+    return await supabase.auth.signOut();
+  },
+
+  async resetPassword(email) {
+    return await supabase.auth.resetPasswordForEmail(email);
+  },
+
+  async getUser() {
+    return await supabase.auth.getUser();
+  }
+};
+
+console.log('Wayfinder Supabase Connected');
+</script>
 
 </body>
 </html>
