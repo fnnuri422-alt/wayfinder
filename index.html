@@ -38,6 +38,43 @@ a{color:#5146d8}
  <div id="headerStatus">Discover your world</div>
 </header>
 
+
+<section id="countryExplorer" class="card">
+  <h2>🌍 Country Explorer</h2>
+  <p>Discover countries around the world.</p>
+  <input id="countrySearch" placeholder="Search a country..." oninput="searchCountries()">
+  <div id="countryResults" class="grid"></div>
+</section>
+
+<script>
+const countries = [
+ {name:"Malaysia",capital:"Kuala Lumpur",region:"Asia"},
+ {name:"Japan",capital:"Tokyo",region:"Asia"},
+ {name:"South Korea",capital:"Seoul",region:"Asia"},
+ {name:"Germany",capital:"Berlin",region:"Europe"},
+ {name:"United Kingdom",capital:"London",region:"Europe"},
+ {name:"Canada",capital:"Ottawa",region:"North America"},
+ {name:"Australia",capital:"Canberra",region:"Oceania"},
+ {name:"France",capital:"Paris",region:"Europe"},
+ {name:"Italy",capital:"Rome",region:"Europe"},
+ {name:"Bangladesh",capital:"Dhaka",region:"Asia"}
+];
+
+function searchCountries(){
+ const q=document.getElementById("countrySearch").value.toLowerCase();
+ const results=countries.filter(c=>
+  (c.name+" "+c.capital+" "+c.region).toLowerCase().includes(q)
+ );
+ document.getElementById("countryResults").innerHTML=results.map(c=>
+  `<article class="item">
+   <h3>${c.name}</h3>
+   <p>Capital: ${c.capital}</p>
+   <p>Region: ${c.region}</p>
+  </article>`
+ ).join("") || "<p>No country found.</p>";
+}
+searchCountries();
+</script>
 <main>
 <section id="authSection">
  <div class="hero">
