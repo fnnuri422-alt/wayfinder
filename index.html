@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#5367e8">
+<title>Wayfinder | Your World, Your Way</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{--blue:#5367e8;--purple:#8054d9;--ink:#20233a;--muted:#70758d;--bg:#f5f6ff;--card:#fff;--line:#e8e9f4;--danger:#d94b62}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Arial,sans-serif}button,input,textarea,select{font:inherit}button{border:0;border-radius:11px;padding:10px 14px;background:linear-gradient(110deg,var(--blue),var(--purple));color:white;font-weight:700;cursor:pointer}button:disabled{opacity:.5}button.secondary{background:#eef0ff;color:#4d55bb}button.danger{background:#fff0f2;color:var(--danger)}input,textarea,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);margin:5px 0 12px}textarea{min-height:90px;resize:vertical}.wrap{max-width:1100px;margin:auto;padding:16px}.hero{background:linear-gradient(120deg,#5367e8,#8054d9);color:white;border-radius:20px;padding:24px;margin:14px 0}.hero h1{margin:0;font-size:30px}.muted,.small{color:var(--muted)}.small{font-size:12px}.card,.item{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 4px 16px #28306b08}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.tabs{display:flex;gap:8px;overflow-x:auto;padding:8px 0;position:sticky;top:0;background:var(--bg);z-index:20}.tabs button{white-space:nowrap;background:#e9ebfb;color:#4b50a6}.tabs button.active{background:linear-gradient(110deg,var(--blue),var(--purple));color:white}.hidden{display:none!important}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.pill{display:inline-block;padding:4px 9px;border-radius:30px;background:#eff0ff;color:#555bb9;font-size:12px}.msg{min-height:20px;color:var(--muted);font-size:13px}#map{height:360px;border-radius:14px;z-index:1}.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:900;color:var(--blue);font-size:20px}.item h3{margin:6px 0}.item p{margin:6px 0}.item button{margin:5px 5px 0 0}.progress{height:9px;background:#eceeff;border-radius:20px;overflow:hidden}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--purple))}@media(max-width:600px){.wrap{padding:10px}.hero{padding:19px}.hero h1{font-size:25px}.tabs{margin:0 -10px;padding:8px 10px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="brand">✦ WAYFINDER</div><span class="small">Your World, Your Way.</span></div>
+  <section id="authSection" class="card">
+    <div class="hero"><h1>Discover your next chapter.</h1><p>Explore places, learn skills, plan journeys and connect with a global community.</p></div>
+    <h2>Welcome to Wayfinder</h2>
+    <div class="grid">
+      <div><label>Email</label><input id="email" type="email" placeholder="you@example.com"><label>Password</label><input id="password" type="password" placeholder="At least 6 characters"><div class="row"><button onclick="signIn()">Log in</button><button class="secondary" onclick="signUp()">Create account</button></div><button class="secondary" onclick="resetPassword()">Reset password</button><p id="authMsg" class="msg"></p></div>
+      <div class="item"><h3>One world. Many possibilities.</h3><p class="muted">Create an account to save discoveries, share ideas and keep your plans together.</p><p class="small">Use the email address you registered with.</p></div>
+    </div>
+  </section>
+  <main id="appSection" class="hidden">
+    <div class="hero"><div class="top"><div><h1>Your world, your way.</h1><p>Make every discovery count.</p></div><button class="secondary" onclick="signOut()">Log out</button></div></div>
+    <nav class="tabs" id="tabs">
+      <button class="active" data-page="community" onclick="showPage('community',this)">Community</button>
+      <button data-page="explore" onclick="showPage('explore',this)">Explore</button>
+      <button data-page="countries" onclick="showPage('countries',this)">Countries</button>
+      <button data-page="mapPage" onclick="showPage('mapPage',this)">World Map</button>
+      <button data-page="universities" onclick="showPage('universities',this)">Universities</button>
+      <button data-page="travel" onclick="showPage('travel',this)">Travel</button>
+      <button data-page="journey" onclick="showPage('journey',this)">Journey AI</button>
+      <button data-page="languages" onclick="showPage('languages',this)">Languages</button>
+      <button data-page="career" onclick="showPage('career',this)">Career</button>
+      <button data-page="alerts" onclick="showPage('alerts',this)">Alerts</button>
+      <button data-page="saved" onclick="showPage('saved',this)">Saved</button>
+      <button data-page="profile" onclick="showPage('profile',this)">Profile</button>
+    </nav>
+
+    <section id="community" class="page">
+      <div class="card"><h2>Community</h2><textarea id="postText" placeholder="Share an idea, question or discovery..."></textarea><button onclick="createPost()">Publish post</button><p id="postMsg" class="msg"></p></div>
+      <div id="feed"></div>
+    </section>
+
+    <section id="explore" class="page hidden">
+      <div class="card"><h2>Explore discoveries</h2><input id="exploreSearch" placeholder="Search places, study, skills..." oninput="renderExplore()"><select id="exploreCategory" onchange="renderExplore()"><option>All</option><option>Study</option><option>Travel</option><option>Career</option><option>Culture</option><option>Skills</option></select><p id="exploreCount" class="small"></p><div id="exploreList"></div></div>
+    </section>
+
+    <section id="countries" class="page hidden"><div class="card"><h2>Countries</h2><input id="countrySearch" placeholder="Search country or capital..." oninput="renderCountries()"><div id="countryList" class="grid"></div></div></section>
