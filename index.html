@@ -4,252 +4,322 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wayfinder | Your World, Your Way</title>
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#080d24;color:#fff}
-button,input{font:inherit}
-nav{display:flex;justify-content:space-between;align-items:center;padding:22px 7%;background:#101633}
-.logo{font-size:25px;font-weight:800;background:linear-gradient(90deg,#64a5ff,#bd80ff);color:transparent;background-clip:text}
-nav button,.primary{border:0;border-radius:12px;padding:12px 22px;background:linear-gradient(110deg,#3478f6,#984de5);color:white;font-weight:bold;cursor:pointer}
-.hero{min-height:570px;padding:100px 8%;text-align:center;background:radial-gradient(ellipse at 50% 20%,#303b86,#101633 55%,#080d24)}
-.tag{display:inline-block;border:1px solid #6567bc;border-radius:30px;padding:9px 17px;color:#c5c5ff;font-size:13px}
-h1{font-size:clamp(42px,8vw,75px);margin:25px 0 18px;line-height:1.08}
-.gradient{background:linear-gradient(90deg,#6aa8ff,#bd83ff);color:transparent;background-clip:text}
-.hero p{color:#c2c8e3;max-width:620px;margin:0 auto 30px;line-height:1.8}
-section{padding:65px 8%;text-align:center}
-.section-title{font-size:34px;margin-bottom:15px}
-.sub{color:#aeb8d7;line-height:1.7}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px;margin-top:35px}
-.card{background:#151e40;border:1px solid #29345f;padding:27px;border-radius:18px;text-align:left}
-.card h3{margin:12px 0}
-.card p{color:#aeb8d7;line-height:1.7;font-size:14px}
-.icon{font-size:30px}
-.auth-wrap{display:none;min-height:75vh;padding:55px 18px;justify-content:center;align-items:center;background:radial-gradient(ellipse at top,#303b86,#080d24)}
-.auth-box{width:100%;max-width:430px;background:#151e40;border:1px solid #34416f;border-radius:22px;padding:30px}
-.auth-box h2{font-size:29px;margin-bottom:10px}
-.auth-box>p{color:#aeb8d7;margin-bottom:24px;line-height:1.6}
-label{display:block;text-align:left;margin:16px 0 8px;color:#d9def4;font-size:14px}
-input{width:100%;padding:14px;border-radius:10px;border:1px solid #39466f;background:#0c1430;color:white;outline:none}
-input:focus{border-color:#8b73f5}
-.full{width:100%;margin-top:20px}
-.switch{text-align:center;margin-top:20px;color:#b9c4e7;font-size:14px}
-.link{color:#a98cff;cursor:pointer;text-decoration:underline}
-.message{margin-top:15px;color:#b9e8d1;font-size:14px;line-height:1.6}
-.dashboard{display:none;min-height:75vh;padding:65px 8%;text-align:center;background:#0c1430}
-.profile{max-width:600px;margin:30px auto;background:#151e40;border:1px solid #34416f;border-radius:20px;padding:35px}
-footer{text-align:center;padding:30px;color:#8792b8;background:#080d24;border-top:1px solid #202b50}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f6ff;color:#20213a}
+header{background:linear-gradient(120deg,#2458d8,#783bd3);color:white;padding:22px 6%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.logo{font-size:25px;font-weight:bold}
+header small{display:block;margin-top:5px}
+main{max-width:1000px;margin:30px auto;padding:0 16px}
+.hero{background:linear-gradient(130deg,#2458d8,#783bd3);color:white;border-radius:22px;padding:35px 24px;margin-bottom:22px}
+.hero h1{font-size:34px;margin:0 0 12px}
+.card{background:white;border-radius:17px;padding:22px;margin:15px 0;box-shadow:0 5px 20px #20205010}
+input,button,select{width:100%;padding:13px;border-radius:10px;border:1px solid #ddd;margin:7px 0;font-size:15px}
+button{background:#5146d8;color:white;border:0;font-weight:bold;cursor:pointer}
+button.secondary{background:#eee;color:#333}
+button.danger{background:#d94359}
+button:disabled{opacity:.5}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
+nav button{width:auto;padding:11px 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.item{border:1px solid #eee;border-radius:14px;padding:17px;background:#fff}
+.item h3{margin-top:0;color:#3e45bd}
+.muted{color:#777;font-size:13px}
 .hidden{display:none!important}
+#notice{padding:12px;border-radius:10px;margin:12px 0;background:#e9eaff;color:#333}
+footer{text-align:center;padding:25px;color:#777}
+a{color:#5146d8}
 </style>
 </head>
 <body>
+<header>
+ <div><div class="logo">✦ Wayfinder</div><small>Your World, Your Way.</small></div>
+ <div id="headerStatus">Discover your world</div>
+</header>
 
-<nav>
-<div class="logo">✦ WAYFINDER</div>
-<button onclick="showAuth('login')">Get Started</button>
-</nav>
+<main>
+<section id="authSection">
+ <div class="hero">
+  <h1>Your world is waiting.</h1>
+  <p>Discover places, explore opportunities and plan your personal journey.</p>
+ </div>
+ <div class="card">
+  <h2 id="authTitle">Create your account</h2>
+  <div id="notice">Sign up or log in to start your Wayfinder journey.</div>
+  <input id="name" placeholder="Your name" autocomplete="name">
+  <input id="email" type="email" placeholder="Email address" autocomplete="email">
+  <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+  <button id="signupBtn" onclick="signUp()">Create Account</button>
+  <button id="loginBtn" onclick="signIn()" class="secondary">Log In</button>
+  <button onclick="resetPassword()" class="secondary">Forgot Password?</button>
+ </div>
+</section>
 
-<main id="home">
-<div class="hero">
-<span class="tag">✦ YOUR WORLD, YOUR WAY</span>
-<h1>Discover More.<br><span class="gradient">Go Further.</span></h1>
-<p>Welcome to Wayfinder — your digital space to explore opportunities, organize your journey and move towards your goals.</p>
-<button class="primary" onclick="showAuth('signup')">Create Your Account →</button>
-</div>
+<section id="appSection" class="hidden">
+ <div class="hero">
+  <h1 id="welcome">Welcome to Wayfinder!</h1>
+  <p>Explore the world. Set goals. Build your journey.</p>
+ </div>
+ <nav>
+  <button onclick="showPage('explore')">Explore</button>
+  <button onclick="showPage('goals')">My Goals</button>
+  <button onclick="showPage('saved')">Saved</button>
+  <button onclick="showPage('profile')">Profile</button>
+  <button onclick="signOut()" class="secondary">Log Out</button>
+ </nav>
 
-<section>
-<h2 class="section-title">Explore <span class="gradient">Wayfinder</span></h2>
-<p class="sub">Everything you need to start your next journey.</p>
-<div class="cards">
-<div class="card"><div class="icon">🌍</div><h3>Explore</h3><p>Discover new opportunities and possibilities around the world.</p></div>
-<div class="card"><div class="icon">🚀</div><h3>Your Journey</h3><p>Keep your goals and next steps organized in one place.</p></div>
-<div class="card"><div class="icon">🎯</div><h3>Your Goals</h3><p>Build your future with a clear direction and purpose.</p></div>
-<div class="card"><div class="icon">🔐</div><h3>Your Account</h3><p>Access your personal space securely.</p></div>
-</div>
+ <section id="explorePage">
+  <div class="card">
+   <h2>Explore the world</h2>
+   <input id="search" placeholder="Search places, study, skills..." oninput="renderExplore()">
+   <select id="category" onchange="renderExplore()">
+    <option value="all">All categories</option>
+    <option value="Study">Study</option>
+    <option value="Travel">Travel</option>
+    <option value="Skills">Skills</option>
+    <option value="Career">Career</option>
+   </select>
+  </div>
+  <div id="exploreList" class="grid"></div>
+ </section>
+
+ <section id="goalsPage" class="hidden">
+  <div class="card">
+   <h2>My Personal Goals</h2>
+   <input id="goalInput" placeholder="Write a goal...">
+   <button onclick="addGoal()">Add Goal</button>
+  </div>
+  <div id="goalList"></div>
+ </section>
+
+ <section id="savedPage" class="hidden">
+  <div class="card"><h2>Saved Discoveries</h2><div id="savedList" class="grid"></div></div>
+ </section>
+
+ <section id="profilePage" class="hidden">
+  <div class="card">
+   <h2>My Profile</h2>
+   <label>Name</label>
+   <input id="profileName" placeholder="Your name">
+   <button onclick="saveProfile()">Save Profile</button>
+   <p id="profileEmail" class="muted"></p>
+  </div>
+ </section>
 </section>
 </main>
-
-<div class="auth-wrap" id="auth">
-<div class="auth-box">
-<h2 id="authTitle">Welcome Back</h2>
-<p id="authSubtitle">Sign in to continue your journey.</p>
-
-<form id="authForm">
-<div id="nameField" class="hidden">
-<label>Your Name</label>
-<input id="name" type="text" placeholder="Enter your name">
-</div>
-<label>Email Address</label>
-<input id="email" type="email" placeholder="you@example.com" required>
-<label>Password</label>
-<input id="password" type="password" placeholder="Enter password" minlength="8" required>
-<button class="primary full" id="submitBtn" type="submit">Login</button>
-</form>
-
-<div class="switch" id="forgotArea">
-<span class="link" onclick="forgotPassword()">Forgot Password?</span>
-</div>
-<div class="switch" id="switchArea">
-<span id="switchText">Don't have an account?</span>
-<span class="link" id="switchLink" onclick="toggleAuth()"> Sign Up</span>
-</div>
-<div class="switch"><span class="link" onclick="showHome()">← Back to Home</span></div>
-<div id="authMessage" class="message"></div>
-</div>
-</div>
-
-<div class="dashboard" id="dashboard">
-<h1>Welcome to <span class="gradient">Wayfinder</span></h1>
-<p class="sub">Your personal journey starts here.</p>
-<div class="profile">
-<div class="icon">👤</div>
-<h2>Your Profile</h2>
-<p id="userEmail" class="sub" style="margin:15px"></p>
-<button class="primary" onclick="logout()">Sign Out</button>
-</div>
-</div>
 
 <footer>© 2026 Wayfinder. All rights reserved.<br>Your World, Your Way.</footer>
 
 <script>
 const SUPABASE_URL = 'https://govrnoanaxxvefpymkig.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_PnKKyNIeSawvmwZw0J4VfQ_wTrFcUKj';
+const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+let currentUser = null;
 
-let mode = 'login';
+const discoveries = [
+ {id:'malaysia',title:'Study in Malaysia',category:'Study',description:'Explore universities, courses and student life in Malaysia.'},
+ {id:'japan',title:'Explore Japan',category:'Travel',description:'Discover Japanese culture, cities and travel opportunities.'},
+ {id:'germany',title:'Study in Germany',category:'Study',description:'Learn about German universities and study pathways.'},
+ {id:'korea',title:'South Korea',category:'Travel',description:'Explore Korean culture, language and destinations.'},
+ {id:'cs-ai',title:'Computer Science & AI',category:'Skills',description:'Start learning programming, computer science and AI concepts.'},
+ {id:'languages',title:'Learn a New Language',category:'Skills',description:'Build a language-learning plan and practice regularly.'},
+ {id:'career',title:'Career Planning',category:'Career',description:'Explore career paths and plan your next steps.'},
+ {id:'scholarship',title:'Scholarship Research',category:'Study',description:'Create a checklist to research scholarship opportunities.'}
+];
 
-const home = document.getElementById('home');
-const auth = document.getElementById('auth');
-const dashboard = document.getElementById('dashboard');
-const message = document.getElementById('authMessage');
-
-function showAuth(type) {
-  mode = type;
-  home.style.display = 'none';
-  dashboard.style.display = 'none';
-  auth.style.display = 'flex';
-  message.textContent = '';
-  updateAuth();
+function message(text){
+ document.getElementById('notice').textContent=text;
+}
+function escapeHTML(value){
+ return String(value??'').replace(/[&<>"']/g,c=>({
+ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+ }[c]));
 }
 
-function showHome() {
-  auth.style.display = 'none';
-  dashboard.style.display = 'none';
-  home.style.display = 'block';
+async function signUp(){
+ const name=document.getElementById('name').value.trim();
+ const email=document.getElementById('email').value.trim();
+ const password=document.getElementById('password').value;
+ if(!name||!email||password.length<6){
+  message('Enter your name, valid email and a password of at least 6 characters.');
+  return;
+ }
+ const {error}=await db.auth.signUp({
+  email,password,
+  options:{data:{full_name:name},
+  emailRedirectTo:location.origin+location.pathname}
+ });
+ if(error){message(error.message);return;}
+ message('Account created! Check your email for the confirmation link.');
 }
 
-function updateAuth() {
-  const signup = mode === 'signup';
-  const reset = mode === 'reset';
-  document.getElementById('authTitle').textContent =
-    signup ? 'Create Account' : reset ? 'Reset Password' : 'Welcome Back';
-  document.getElementById('authSubtitle').textContent =
-    signup ? 'Join Wayfinder and start your journey.' :
-    reset ? 'We will email you a password reset link.' :
-    'Sign in to continue your journey.';
-  document.getElementById('nameField').classList.toggle('hidden', !signup);
-  document.getElementById('password').classList.toggle('hidden', reset);
-  document.getElementById('submitBtn').textContent =
-    signup ? 'Create Account' : reset ? 'Send Reset Link' : 'Login';
-  document.getElementById('forgotArea').classList.toggle('hidden', signup || reset);
-  document.getElementById('switchArea').classList.toggle('hidden', reset);
-  document.getElementById('switchText').textContent =
-    signup ? 'Already have an account?' : "Don't have an account?";
-  document.getElementById('switchLink').textContent =
-    signup ? ' Login' : ' Sign Up';
+async function signIn(){
+ const email=document.getElementById('email').value.trim();
+ const password=document.getElementById('password').value;
+ if(!email||!password){message('Enter your email and password.');return;}
+ const {error}=await db.auth.signInWithPassword({email,password});
+ if(error){message(error.message);return;}
 }
 
-function toggleAuth() {
-  showAuth(mode === 'signup' ? 'login' : 'signup');
+async function resetPassword(){
+ const email=document.getElementById('email').value.trim();
+ if(!email){message('Enter your email address first.');return;}
+ const {error}=await db.auth.resetPasswordForEmail(email,{
+  redirectTo:location.origin+location.pathname
+ });
+ message(error?error.message:'Password reset link sent. Check your email.');
 }
 
-document.getElementById('authForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
-  message.textContent = 'Please wait...';
+async function signOut(){
+ await db.auth.signOut();
+}
 
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-  const redirectURL = window.location.origin + window.location.pathname;
+function openApp(user){
+ currentUser=user;
+ document.getElementById('authSection').classList.add('hidden');
+ document.getElementById('appSection').classList.remove('hidden');
+ document.getElementById('headerStatus').textContent='Your journey starts here';
+ const name=user.user_metadata?.full_name||user.email;
+ document.getElementById('welcome').textContent='Welcome, '+name+'!';
+ document.getElementById('profileName').value=user.user_metadata?.full_name||'';
+ document.getElementById('profileEmail').textContent=user.email||'';
+ showPage('explore');
+}
 
-  try {
-    let result;
+function showAuth(){
+ currentUser=null;
+ document.getElementById('authSection').classList.remove('hidden');
+ document.getElementById('appSection').classList.add('hidden');
+ document.getElementById('headerStatus').textContent='Discover your world';
+}
 
-    if (mode === 'signup') {
-      result = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { full_name: document.getElementById('name').value.trim() },
-          emailRedirectTo: redirectURL
-        }
-      });
-      if (!result.error) {
-        message.textContent = 'Account created! Please check your email and confirm your account.';
-      }
-    } else if (mode === 'reset') {
-      result = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: redirectURL
-      });
-      if (!result.error) message.textContent = 'Password reset link sent. Check your email.';
-    } else {
-      result = await supabase.auth.signInWithPassword({ email, password });
-      if (!result.error) openDashboard(result.data.user);
-    }
+function showPage(page){
+ ['explore','goals','saved','profile'].forEach(p=>{
+  document.getElementById(p+'Page').classList.toggle('hidden',p!==page);
+ });
+ if(page==='explore')renderExplore();
+ if(page==='goals')loadGoals();
+ if(page==='saved')loadSaved();
+}
 
-    if (result.error) message.textContent = result.error.message;
-  } catch (error) {
-    message.textContent = 'Something went wrong. Please try again.';
-  }
+function renderExplore(){
+ const query=(document.getElementById('search').value||'').toLowerCase();
+ const category=document.getElementById('category').value;
+ const results=discoveries.filter(item=>
+  (category==='all'||item.category===category)&&
+  (item.title+' '+item.description+' '+item.category).toLowerCase().includes(query)
+ );
+ document.getElementById('exploreList').innerHTML=results.map(item=>`
+  <article class="item">
+   <p class="muted">${escapeHTML(item.category)}</p>
+   <h3>${escapeHTML(item.title)}</h3>
+   <p>${escapeHTML(item.description)}</p>
+   <button onclick="saveDiscovery('${item.id}')">Save Discovery</button>
+  </article>`).join('')||'<p>No results found.</p>';
+}
+
+async function saveDiscovery(id){
+ const item=discoveries.find(x=>x.id===id);
+ if(!item)return;
+ const {error}=await db.from('saved_items').upsert({
+  user_id:currentUser.id,
+  item_id:item.id,
+  title:item.title,
+  category:item.category
+ },{onConflict:'user_id,item_id'});
+ if(error){alert('Could not save. Please check the database setup. '+error.message);return;}
+ alert('Discovery saved!');
+}
+
+async function loadSaved(){
+ const box=document.getElementById('savedList');
+ box.innerHTML='Loading...';
+ const {data,error}=await db.from('saved_items')
+  .select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
+ if(error){box.textContent='Database setup needed: '+error.message;return;}
+ box.innerHTML=(data||[]).map(item=>`
+  <article class="item">
+   <h3>${escapeHTML(item.title)}</h3>
+   <p class="muted">${escapeHTML(item.category)}</p>
+   <button class="danger" onclick="removeSaved('${item.id}')">Remove</button>
+  </article>`).join('')||'<p>No saved discoveries yet.</p>';
+}
+
+async function removeSaved(id){
+ const {error}=await db.from('saved_items').delete()
+  .eq('id',id).eq('user_id',currentUser.id);
+ if(error){alert(error.message);return;}
+ loadSaved();
+}
+
+async function addGoal(){
+ const title=document.getElementById('goalInput').value.trim();
+ if(!title)return alert('Write a goal first.');
+ const {error}=await db.from('user_goals').insert({
+  user_id:currentUser.id,title,completed:false
+ });
+ if(error){alert('Could not add goal. Check database setup. '+error.message);return;}
+ document.getElementById('goalInput').value='';
+ loadGoals();
+}
+
+async function loadGoals(){
+ const box=document.getElementById('goalList');
+ box.innerHTML='Loading...';
+ const {data,error}=await db.from('user_goals')
+  .select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
+ if(error){box.textContent='Database setup needed: '+error.message;return;}
+ box.innerHTML=(data||[]).map(goal=>`
+  <div class="card">
+   <strong>${escapeHTML(goal.title)}</strong>
+   <p class="muted">${goal.completed?'Completed':'In progress'}</p>
+   <button onclick="toggleGoal('${goal.id}',${!goal.completed})">
+    ${goal.completed?'Reopen':'Mark Complete'}
+   </button>
+   <button class="danger" onclick="deleteGoal('${goal.id}')">Delete</button>
+  </div>`).join('')||'<p>No goals yet. Add your first goal!</p>';
+}
+
+async function toggleGoal(id,completed){
+ const {error}=await db.from('user_goals').update({completed})
+  .eq('id',id).eq('user_id',currentUser.id);
+ if(error){alert(error.message);return;}
+ loadGoals();
+}
+
+async function deleteGoal(id){
+ const {error}=await db.from('user_goals').delete()
+  .eq('id',id).eq('user_id',currentUser.id);
+ if(error){alert(error.message);return;}
+ loadGoals();
+}
+
+async function saveProfile(){
+ const name=document.getElementById('profileName').value.trim();
+ if(!name)return alert('Enter your name.');
+ const {error}=await db.auth.updateUser({data:{full_name:name}});
+ if(error){alert(error.message);return;}
+ document.getElementById('welcome').textContent='Welcome, '+name+'!';
+ alert('Profile updated!');
+}
+
+db.auth.onAuthStateChange((event,session)=>{
+ if(session?.user){
+  openApp(session.user);
+ }else{
+  showAuth();
+ }
 });
 
-function forgotPassword() {
-  mode = 'reset';
-  message.textContent = '';
-  updateAuth();
+async function start(){
+ const {data,error}=await db.auth.getSession();
+ if(error){message(error.message);return;}
+ if(data.session?.user)openApp(data.session.user);
+ else showAuth();
 }
-
-function openDashboard(user) {
-  home.style.display = 'none';
-  auth.style.display = 'none';
-  dashboard.style.display = 'block';
-  document.getElementById('userEmail').textContent = user.email || '';
-}
-
-async function logout() {
-  const { error } = await supabase.auth.signOut();
-  if (error) {
-    alert(error.message);
-    return;
-  }
-  showHome();
-}
-
-supabase.auth.onAuthStateChange((event, session) => {
-  if (event === 'PASSWORD_RECOVERY') {
-    showAuth('reset');
-    document.getElementById('authTitle').textContent = 'Choose a New Password';
-    document.getElementById('authSubtitle').textContent = 'Enter your new password below.';
-    document.getElementById('submitBtn').textContent = 'Update Password';
-    document.getElementById('authForm').onsubmit = async (e) => {
-      e.preventDefault();
-      const { error } = await supabase.auth.updateUser({
-        password: document.getElementById('password').value
-      });
-      message.textContent = error ? error.message : 'Password updated. You can now log in.';
-    };
-  } else if (session && event === 'SIGNED_IN') {
-    openDashboard(session.user);
-  }
-});
-
-(async () => {
-  const { data } = await supabase.auth.getSession();
-  if (data.session) openDashboard(data.session.user);
-})();
+start();
 </script>
 </body>
 </html>
